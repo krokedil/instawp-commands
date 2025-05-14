@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
 
-const API_URL = 'https://app.instawp.io/api/v2/cli/commands';
+const API_URL = 'https://app.instawp.io/api/v2/commands';
 const API_KEY = process.env.INSTAWP_API_TOKEN;
 const COMMANDS_DIR = path.join(__dirname, '../../commands');
 const RESULT_FILE = path.join(process.cwd(), 'sync-results.txt');
