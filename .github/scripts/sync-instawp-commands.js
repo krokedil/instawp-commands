@@ -73,12 +73,20 @@ async function updateCommand(id, name, command) {
 
   const created = [], updated = [], unchanged = [];
 
+  function normalizeContent(str) {
+    return (str || '')
+      .replace(/\r\n/g, '\n')
+      .replace(/\r/g, '\n')
+      .split('\n').map(line => line.trimEnd()).join('\n')
+      .trim();
+  }
+
   for (const cmd of localCommands) {
     const remote = remoteMap[cmd.name];
     if (!remote) {
       await createCommand(cmd.name, cmd.content);
       created.push(cmd.name);
-    } else if ((remote.command || '').replace(/\r\n/g, '\n') !== cmd.content) {
+    } else if (normalizeContent(remote.command) !== normalizeContent(cmd.content)) {
       await updateCommand(remote.id, cmd.name, cmd.content);
       updated.push(cmd.name);
     } else {
