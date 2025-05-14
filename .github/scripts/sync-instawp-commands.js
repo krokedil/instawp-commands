@@ -84,13 +84,24 @@ async function updateCommand(id, name, command) {
   for (const cmd of localCommands) {
     const remote = remoteMap[cmd.name];
     if (!remote) {
+      console.log(`[CREATE] ${cmd.name}`);
       await createCommand(cmd.name, cmd.content);
       created.push(cmd.name);
-    } else if (normalizeContent(remote.command) !== normalizeContent(cmd.content)) {
-      await updateCommand(remote.id, cmd.name, cmd.content);
-      updated.push(cmd.name);
     } else {
-      unchanged.push(cmd.name);
+      const localNorm = normalizeContent(cmd.content);
+      const remoteNorm = normalizeContent(remote.command);
+      if (remoteNorm !== localNorm) {
+        console.log(`[UPDATE] ${cmd.name}`);
+        console.log('--- Local content ---');
+        console.log(localNorm);
+        console.log('--- Remote content ---');
+        console.log(remoteNorm);
+        await updateCommand(remote.id, cmd.name, cmd.content);
+        updated.push(cmd.name);
+      } else {
+        console.log(`[UNCHANGED] ${cmd.name}`);
+        unchanged.push(cmd.name);
+      }
     }
   }
 
