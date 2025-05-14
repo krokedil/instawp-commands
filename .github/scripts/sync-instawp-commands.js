@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
+const core = require('@actions/core');
 
 const API_URL = 'https://app.instawp.io/api/v2/commands';
 const API_KEY = process.env.INSTAWP_API_TOKEN;
@@ -97,4 +98,11 @@ async function updateCommand(id, name, command) {
 
   fs.writeFileSync(RESULT_FILE, result);
   console.log(result);
+
+  // Add GitHub Actions annotation
+  if (process.env.GITHUB_ACTIONS) {
+    core.summary.addHeading('InstaWP Command Sync Results')
+      .addCode(result, 'text')
+      .write();
+  }
 })().catch(e => { console.error(e); process.exit(1); });
