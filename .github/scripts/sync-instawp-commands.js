@@ -14,7 +14,11 @@ if (!API_KEY) {
 
 async function fetchRemoteCommands() {
   const res = await fetch(API_URL, {
-    headers: { 'x-api-key': API_KEY }
+    headers: {
+      'Authorization': `Bearer ${API_KEY}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
   });
   if (!res.ok) {
     const errText = await res.text();
@@ -27,7 +31,8 @@ async function createCommand(name, command) {
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: {
-      'x-api-key': API_KEY,
+      'Authorization': `Bearer ${API_KEY}`,
+      'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ name, command })
@@ -42,7 +47,8 @@ async function updateCommand(id, name, command) {
   const res = await fetch(`${API_URL}/${id}`, {
     method: 'PUT',
     headers: {
-      'x-api-key': API_KEY,
+      'Authorization': `Bearer ${API_KEY}`,
+      'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ name, command })
