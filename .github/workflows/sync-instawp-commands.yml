@@ -3,9 +3,8 @@ name: Sync InstaWP Commands
 on:
   workflow_dispatch:
   push:
-    paths:
-      - 'commands/*.sh'
-      - '.github/workflows/sync-instawp-commands.yml'
+    branches:
+      - main
 
 jobs:
   sync-commands:

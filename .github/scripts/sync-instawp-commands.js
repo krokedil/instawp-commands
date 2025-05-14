@@ -99,10 +99,10 @@ async function updateCommand(id, name, command) {
   fs.writeFileSync(RESULT_FILE, result);
   console.log(result);
 
-  // Add GitHub Actions annotation
+  // Add GitHub Actions annotation (async/await for summary API)
   if (process.env.GITHUB_ACTIONS) {
-    core.summary.addHeading('InstaWP Command Sync Results')
-      .addCode(result, 'text')
-      .write();
+    await core.summary.addHeading('InstaWP Command Sync Results');
+    await core.summary.addCode(result, 'text');
+    await core.summary.write();
   }
 })().catch(e => { console.error(e); process.exit(1); });
