@@ -1,0 +1,35 @@
+name: Sync InstaWP Commands
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'commands/*.sh'
+      - '.github/workflows/sync-instawp-commands.yml'
+
+jobs:
+  sync-commands:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install node-fetch@2
+
+      - name: Sync commands to InstaWP
+        env:
+          INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
+        run: node .github/scripts/sync-instawp-commands.js
+
+      - name: Annotate results
+        if: always()
+        run: |
+          if [ -f sync-results.txt ]; then
+            cat sync-results.txt
+          fi
