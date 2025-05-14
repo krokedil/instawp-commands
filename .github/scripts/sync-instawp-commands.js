@@ -102,7 +102,8 @@ async function updateCommand(id, name, command) {
   // Add GitHub Actions annotation (async/await for summary API)
   if (process.env.GITHUB_ACTIONS) {
     await core.summary.addHeading('InstaWP Command Sync Results');
-    await core.summary.addCode(result, 'text');
+    await core.summary.addRaw(`\n\
+\`\`\`text\n${result}\n\`\`\`\n`);
     await core.summary.write();
   }
 })().catch(e => { console.error(e); process.exit(1); });
