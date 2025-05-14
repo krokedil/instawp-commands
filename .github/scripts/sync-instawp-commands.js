@@ -14,9 +14,12 @@ if (!API_KEY) {
 
 async function fetchRemoteCommands() {
   const res = await fetch(API_URL, {
-    headers: { 'Authorization': `Bearer ${API_KEY}` }
+    headers: { 'x-api-key': API_KEY }
   });
-  if (!res.ok) throw new Error('Failed to fetch InstaWP commands');
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Failed to fetch InstaWP commands: ${res.status} ${res.statusText}\n${errText}`);
+  }
   return (await res.json()).data || [];
 }
 
@@ -24,24 +27,30 @@ async function createCommand(name, command) {
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${API_KEY}`,
+      'x-api-key': API_KEY,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ name, command })
   });
-  if (!res.ok) throw new Error(`Failed to create command ${name}`);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Failed to create command ${name}: ${res.status} ${res.statusText}\n${errText}`);
+  }
 }
 
 async function updateCommand(id, name, command) {
   const res = await fetch(`${API_URL}/${id}`, {
     method: 'PUT',
     headers: {
-      'Authorization': `Bearer ${API_KEY}`,
+      'x-api-key': API_KEY,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ name, command })
   });
-  if (!res.ok) throw new Error(`Failed to update command ${name}`);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Failed to update command ${name}: ${res.status} ${res.statusText}\n${errText}`);
+  }
 }
 
 (async () => {
