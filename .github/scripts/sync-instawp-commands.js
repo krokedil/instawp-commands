@@ -89,12 +89,25 @@ async function updateCommand(id, name, command) {
   const localNames = new Set(localCommands.map(c => c.name));
   const extra = remoteCommands.filter(c => !localNames.has(c.name)).map(c => c.name);
 
+  function formatList(title, arr, idMap) {
+    if (!arr.length) return `${title}:\n- None`;
+    return `${title}:\n` + arr.map(x => {
+      const id = idMap && idMap[x] ? ` (id: ${idMap[x]})` : '';
+      return `- ${x}${id}`;
+    }).join('\n');
+  }
+
+  // Build name-to-id maps for local and extra commands
+  const remoteIdMap = Object.fromEntries(remoteCommands.map(c => [c.name, c.id]));
+  const localIdMap = Object.fromEntries(localCommands.map(c => [c.name, remoteIdMap[c.name] || '']));
+  const extraIdMap = Object.fromEntries(extra.map(name => [name, remoteIdMap[name]]));
+
   const result = [
-    `Created: ${created.length ? created.join(', ') : 'None'}`,
-    `Updated: ${updated.length ? updated.join(', ') : 'None'}`,
-    `Unchanged: ${unchanged.length ? unchanged.join(', ') : 'None'}`,
-    `Extra in InstaWP: ${extra.length ? extra.join(', ') : 'None'}`
-  ].join('\n');
+    formatList('Created', created, localIdMap),
+    formatList('Updated', updated, localIdMap),
+    formatList('Unchanged', unchanged, localIdMap),
+    formatList('Commands that are found in InstaWP but not in this repository', extra, extraIdMap)
+  ].join('\n\n');
 
   fs.writeFileSync(RESULT_FILE, result);
   console.log(result);
@@ -102,6 +115,7 @@ async function updateCommand(id, name, command) {
   // Add GitHub Actions annotation (async/await for summary API)
   if (process.env.GITHUB_ACTIONS) {
     await core.summary.addHeading('InstaWP Command Sync Results');
+    await core.summary.addRaw('\nHere is a summary of changes that has been made to the InstaWP commands by this GitHub Action:\n\n');
     await core.summary.addRaw(`\n\
 \`\`\`text\n${result}\n\`\`\`\n`);
     await core.summary.write();
