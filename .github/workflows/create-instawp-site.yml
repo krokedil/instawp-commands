@@ -7,11 +7,10 @@ jobs:
   create-instawp-site:
     runs-on: ubuntu-latest
     steps:
-      - name: Create a new InstaWP site (all parameters)
+      - name: Create a new InstaWP site
         env:
           INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
         run: |
-          # Further info aboout the InstaWP API can be found at https://documenter.getpostman.com/view/21495096/2s8YzUyhUf#f3261750-f451-4258-94cf-987e867fa6a8
           curl -X POST \
             -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
             -H "Accept: application/json" \
@@ -25,3 +24,77 @@ jobs:
             https://app.instawp.io/api/v2/sites > instawp-site-response.json
           echo "Response from InstaWP:"
           cat instawp-site-response.json
+
+      - name: Extract task_id
+        id: extract_task
+        run: |
+          TASK_ID=$(jq -r '.data.task_id' instawp-site-response.json)
+          echo "Task ID: $TASK_ID"
+          echo "task_id=$TASK_ID" >> $GITHUB_OUTPUT
+
+      - name: Wait for site to be ready and extract site_hash
+        id: wait_for_site
+        env:
+          INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
+        run: |
+          TASK_ID="${{ steps.extract_task.outputs.task_id }}"
+          for i in {1..30}; do
+            echo "Checking site status (attempt $i)..."
+            curl -s -X GET \
+              -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
+              -H "Accept: application/json" \
+              https://app.instawp.io/api/v2/sites/task/$TASK_ID > instawp-site-task-response.json
+            STATUS=$(jq -r '.data.status' instawp-site-task-response.json)
+            S_HASH=$(jq -r '.data.s_hash' instawp-site-task-response.json)
+            echo "Status: $STATUS, s_hash: $S_HASH"
+            if [ "$STATUS" = "2" ] && [ -n "$S_HASH" ] && [ "$S_HASH" != "null" ]; then
+              echo "Site is ready!"
+              echo "site_hash=$S_HASH" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Timed out waiting for site to be ready." >&2
+          exit 1
+
+      - name: Extract site_id
+        id: extract_site_id
+        run: |
+          SITE_ID=$(jq -r '.data.id' instawp-site-response.json)
+          echo "Site ID: $SITE_ID"
+          echo "site_id=$SITE_ID" >> $GITHUB_OUTPUT
+
+      - name: Run helper-install-wc-dev-version command
+        env:
+          INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
+        run: |
+          SITE_ID="${{ steps.extract_site_id.outputs.site_id }}"
+          curl -X POST \
+            -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "command_id": 2336
+            }' \
+            https://app.instawp.io/api/v2/sites/$SITE_ID/execute-command > instawp-command1-response.json
+          echo "Command run response (helper-install-wc-dev-version):"
+          cat instawp-command1-response.json
+
+      - name: Run helper-wc-blueprint-import command
+        env:
+          INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
+        run: |
+          SITE_ID="${{ steps.extract_site_id.outputs.site_id }}"
+          curl -X POST \
+            -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "command_id": 2334,
+              "commandArguments": [
+                { "name": "wc_blueprint_json_public_url", "value": "https://raw.githubusercontent.com/krokedil/instawp-commands/refs/heads/main/assets/wc-blueprints/wc-blueprint-default.json" }
+              ]
+            }' \
+            https://app.instawp.io/api/v2/sites/$SITE_ID/execute-command > instawp-command2-response.json
+          echo "Command run response (helper-wc-blueprint-import):"
+          cat instawp-command2-response.json
