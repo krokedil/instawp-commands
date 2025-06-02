@@ -45,7 +45,7 @@ jobs:
             "expiry_hours": '"$EXPIRY_HOURS"'
           '
           if [ -n "$SITE_NAME" ]; then
-            JSON_PAYLOAD+=" ,\"site_label\": \"$SITE_NAME\""
+            JSON_PAYLOAD+=" ,\"site_name\": \"$SITE_NAME\""
           fi
           if [ -n "${{ github.event.inputs.wp_version }}" ]; then
             JSON_PAYLOAD+=" ,\"wp_version\": \"${{ github.event.inputs.wp_version }}\""
@@ -141,13 +141,13 @@ jobs:
       - name: Annotate site creation summary
         run: |
           SITE_ID="${{ steps.extract_site_id.outputs.site_id }}"
-          # Fetch site details to get the site URL (domain)
+          # Fetch site details to get the site URL (url field)
           SITE_DETAILS=$(curl -s -X GET \
             -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
             -H "Accept: application/json" \
             https://app.instawp.io/api/v2/sites/$SITE_ID)
-          SITE_DOMAIN=$(echo "$SITE_DETAILS" | jq -r '.data.domain')
-          if [ -z "$SITE_DOMAIN" ] || [ "$SITE_DOMAIN" = "null" ]; then
-            SITE_DOMAIN="(domain not available)"
+          SITE_URL=$(echo "$SITE_DETAILS" | jq -r '.data.url')
+          if [ -z "$SITE_URL" ] || [ "$SITE_URL" = "null" ]; then
+            SITE_URL="(url not available)"
           fi
-          echo "::notice title=InstaWP Site Created::Created site $SITE_DOMAIN, find magic login and details at https://app.instawp.io/sites/$SITE_ID/staging-dashboard?tab=all"
+          echo "::notice title=InstaWP Site Created::Created site $SITE_URL, find magic login and details at https://app.instawp.io/sites/$SITE_ID/staging-dashboard?tab=all"
