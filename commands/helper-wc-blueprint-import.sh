@@ -1,12 +1,11 @@
 # Helper script to import WooCommerce blueprint
 
-# Save the provided json as an argument as a file
-cat <<'EOF' > ~/wc-blueprint-imported-from-instawp-command.json
-{{wc_blueprint_json}}
-EOF
+# Download the provided public JSON file to a private location in the home directory
+TMP_JSON="~/wc-blueprint-imported-from-instawp-command.json"
+curl -fsSL "{{wc_blueprint_json_public_url}}" -o "$TMP_JSON"
 
 # Import the WooCommerce blueprint using the wp wc command
-wp wc blueprint import ~/wc-blueprint-imported-from-instawp-command.json --show-messages=all
+wp wc blueprint import "$TMP_JSON" --show-messages=all
 
 # Remove the temporary file
-rm ~/wc-blueprint-imported-from-instawp-command.json
+rm "$TMP_JSON"
