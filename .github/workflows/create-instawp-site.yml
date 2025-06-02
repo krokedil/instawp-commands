@@ -142,6 +142,8 @@ jobs:
           cat instawp-command2-response.json
 
       - name: Annotate site creation summary
+        env:
+          INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
         run: |
           SITE_ID="${{ steps.extract_site_id.outputs.site_id }}"
           # Fetch site details to get the site URL (url field)
