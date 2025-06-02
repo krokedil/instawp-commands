@@ -42,6 +42,8 @@ async function createCommand(name, command) {
     const errText = await res.text();
     throw new Error(`Failed to create command ${name}: ${res.status} ${res.statusText}\n${errText}`);
   }
+  const data = await res.json();
+  return data.data && data.data.id ? data.data.id : null;
 }
 
 async function updateCommand(id, name, command) {
@@ -72,6 +74,7 @@ async function updateCommand(id, name, command) {
   const remoteMap = Object.fromEntries(remoteCommands.map(c => [c.name, c]));
 
   const created = [], updated = [], unchanged = [];
+  const createdIdMap = {};
 
   function normalizeContent(str) {
     return (str || '')
@@ -85,8 +88,9 @@ async function updateCommand(id, name, command) {
     const remote = remoteMap[cmd.name];
     if (!remote) {
       core.info(`[CREATE] ${cmd.name}`);
-      await createCommand(cmd.name, cmd.content);
+      const newId = await createCommand(cmd.name, cmd.content);
       created.push(cmd.name);
+      if (newId) createdIdMap[cmd.name] = newId;
     } else {
       const localNorm = normalizeContent(cmd.content);
       // Use command_payload for remote content comparison
@@ -119,7 +123,7 @@ async function updateCommand(id, name, command) {
 
   // Build name-to-id maps for local and extra commands
   const remoteIdMap = Object.fromEntries(remoteCommands.map(c => [c.name, c.id]));
-  const localIdMap = Object.fromEntries(localCommands.map(c => [c.name, remoteIdMap[c.name] || '']));
+  const localIdMap = Object.fromEntries(localCommands.map(c => [c.name, remoteIdMap[c.name] || createdIdMap[c.name] || '']));
   const extraIdMap = Object.fromEntries(extra.map(name => [name, remoteIdMap[name]]));
 
   const result = [
