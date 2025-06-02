@@ -32,7 +32,7 @@ jobs:
           echo "Task ID: $TASK_ID"
           echo "task_id=$TASK_ID" >> $GITHUB_OUTPUT
 
-      - name: Wait for site to be ready and extract site_hash
+      - name: Wait for site to be ready and extract site_id
         id: wait_for_site
         env:
           INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
@@ -44,12 +44,12 @@ jobs:
               -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
               -H "Accept: application/json" \
               https://app.instawp.io/api/v2/tasks/$TASK_ID/status > instawp-site-task-response.json
-            STATUS=$(jq -r '.data.status' instawp-site-task-response.json)
-            S_HASH=$(jq -r '.data.s_hash' instawp-site-task-response.json)
-            echo "Status: $STATUS, s_hash: $S_HASH"
-            if [ "$STATUS" = "2" ] && [ -n "$S_HASH" ] && [ "$S_HASH" != "null" ]; then
+            TASK_STATUS=$(jq -r '.data.status' instawp-site-task-response.json)
+            SITE_ID=$(jq -r '.data.resource_id' instawp-site-task-response.json)
+            echo "Task status: $TASK_STATUS, site_id: $SITE_ID"
+            if [ "$TASK_STATUS" = "completed" ] && [ -n "$SITE_ID" ] && [ "$SITE_ID" != "null" ]; then
               echo "Site is ready!"
-              echo "site_hash=$S_HASH" >> $GITHUB_OUTPUT
+              echo "site_id=$SITE_ID" >> $GITHUB_OUTPUT
               exit 0
             fi
             sleep 10
@@ -60,7 +60,7 @@ jobs:
       - name: Extract site_id
         id: extract_site_id
         run: |
-          SITE_ID=$(jq -r '.data.id' instawp-site-response.json)
+          SITE_ID="${{ steps.wait_for_site.outputs.site_id }}"
           echo "Site ID: $SITE_ID"
           echo "site_id=$SITE_ID" >> $GITHUB_OUTPUT
 
