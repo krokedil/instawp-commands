@@ -83,6 +83,9 @@ jobs:
               -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
               -H "Accept: application/json" \
               https://app.instawp.io/api/v2/tasks/$TASK_ID/status > instawp-site-task-response.json
+            echo "--- Response from InstaWP (task status) ---"
+            cat instawp-site-task-response.json
+            echo "------------------------------------------"
             TASK_STATUS=$(jq -r '.data.status' instawp-site-task-response.json)
             SITE_ID=$(jq -r '.data.resource_id' instawp-site-task-response.json)
             echo "Task status: $TASK_STATUS, site_id: $SITE_ID"
@@ -146,6 +149,9 @@ jobs:
             -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
             -H "Accept: application/json" \
             https://app.instawp.io/api/v2/sites/$SITE_ID)
+          echo "--- Response from InstaWP (site details) ---"
+          echo "$SITE_DETAILS"
+          echo "---------------------------------------------"
           SITE_URL=$(echo "$SITE_DETAILS" | jq -r '.data.url')
           if [ -z "$SITE_URL" ] || [ "$SITE_URL" = "null" ]; then
             SITE_URL="(url not available)"
