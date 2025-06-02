@@ -1,0 +1,27 @@
+name: Create InstaWP Site
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-instawp-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create a new InstaWP site (all parameters)
+        env:
+          INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
+        run: |
+          # Further info aboout the InstaWP API can be found at https://documenter.getpostman.com/view/21495096/2s8YzUyhUf#f3261750-f451-4258-94cf-987e867fa6a8
+          curl -X POST \
+            -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "configuration_id": 5141,
+              "team_id": 4875,
+              "is_reserved": false,
+              "expiry_hours": 1
+            }' \
+            https://app.instawp.io/api/v2/sites > instawp-site-response.json
+          echo "Response from InstaWP:"
+          cat instawp-site-response.json
