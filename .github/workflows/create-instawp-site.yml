@@ -43,7 +43,7 @@ jobs:
             curl -s -X GET \
               -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
               -H "Accept: application/json" \
-              https://app.instawp.io/api/v2/sites/task/$TASK_ID > instawp-site-task-response.json
+              https://app.instawp.io/api/v2/tasks/$TASK_ID/status > instawp-site-task-response.json
             STATUS=$(jq -r '.data.status' instawp-site-task-response.json)
             S_HASH=$(jq -r '.data.s_hash' instawp-site-task-response.json)
             echo "Status: $STATUS, s_hash: $S_HASH"
