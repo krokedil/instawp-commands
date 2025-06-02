@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       site_name:
-        description: 'Leave blank for surprise'
+        description: 'Site name (Leave blank for surprise)'
         required: false
         default: ''
       is_reserved:
@@ -13,15 +13,15 @@ on:
         required: true
         default: false
       expiry_hours:
-        description: 'Number of hours before site expires (default: 1)'
+        description: 'Expiry hours if not reserved'
         required: false
         default: '1'
       wp_version:
-        description: 'WordPress version to install (leave empty for default)'
+        description: 'WP version (Leave blank for default)'
         required: false
         default: ''
       php_version:
-        description: 'PHP version to use (leave empty for default)'
+        description: 'PHP version (Leave blank for default)'
         required: false
         default: ''
 
