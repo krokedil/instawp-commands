@@ -35,17 +35,3 @@ wp user meta add 1 shipping_address_1 "Sveavägen 1"
 wp user meta add 1 shipping_city "Stockholm"
 wp user meta add 1 shipping_postcode "11157"
 wp user meta add 1 shipping_phone "+463390510"
-
-# Delete default pages, publish privacy policy and refund/returns pages and set refund/returns page as terms page.
-wp post delete $(wp post list --pagename='sample-page' --format=ids) $(wp post list --post_name='hello-world' --format=ids) --force # Delete defualt page "Sample page" and defualt post "Hello world!"
-wp post update $(wp post list --pagename='privacy-policy' --format=ids) $(wp post list --pagename='refund_returns' --format=ids) --post_status=publish
-wp option update woocommerce_terms_page_id $(wp post list --pagename='refund_returns' --format=ids)
-
-# Create and assign menus.
-wp menu create "Primary menu"
-wp menu location assign primary-menu primary
-wp menu location assign primary-menu handheld
-wp menu item add-post primary-menu $(wp option get woocommerce_shop_page_id)
-wp menu item add-post primary-menu $(wp option get woocommerce_cart_page_id)
-wp menu item add-post primary-menu $(wp option get woocommerce_checkout_page_id)
-wp menu item add-post primary-menu $(wp option get woocommerce_myaccount_page_id)
