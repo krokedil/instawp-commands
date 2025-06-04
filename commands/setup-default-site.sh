@@ -19,5 +19,3 @@ rm "wxr-imported-from-instawp-command.xml"
 wp wc tax create --country="SE" --rate="25" --name="VAT 25%" --class="standard" --user=1
 wp wc tax create --country="SE" --rate="12" --name="VAT 12%" --class="reduced-rate" --user=1
 wp wc tax create --country="SE" --rate="0" --name="VAT 0%" --class="zero-rate" --user=1
-wp wc shipping_zone_method create 0 --enabled=true --method_id="flat_rate" --settings='{"title": "Home delivery","cost": "40,83"}' --user=1
-wp wc shipping_zone_method create 0 --enabled=true --method_id="local_pickup" --settings='{"title": "Pickup in store","cost": "0"}' --user=1
