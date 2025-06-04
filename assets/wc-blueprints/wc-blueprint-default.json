@@ -20,7 +20,8 @@
         "timezone_string": "Europe/Stockholm",
         "blog_public": "0",
         "blogname": "WooCommerce demoshop",
-        "blogdescription": "By Krokedil"
+        "blogdescription": "By Krokedil",
+        "show_on_front": "page"
       }
     },
     {
