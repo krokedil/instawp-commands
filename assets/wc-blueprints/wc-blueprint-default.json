@@ -10,7 +10,7 @@
       "options": {
         "activate": true
       }
-    },
+    },   
     {
       "step": "setSiteOptions",
       "options": {
@@ -97,30 +97,6 @@
       }
     },
     {
-      "step": "runSql",
-      "sql": {
-        "resource": "literal",
-        "name": "schema.sql",
-        "contents": "replace into `iwpd524_woocommerce_tax_rates` (`tax_rate_id`, `tax_rate_country`, `tax_rate_state`, `tax_rate`, `tax_rate_name`, `tax_rate_priority`, `tax_rate_compound`, `tax_rate_shipping`, `tax_rate_order`, `tax_rate_class`) VALUES ('1', 'SE', '', '25.0000', 'VAT 25%', '1', '0', '1', '0', '');"
-      }
-    },
-    {
-      "step": "runSql",
-      "sql": {
-        "resource": "literal",
-        "name": "schema.sql",
-        "contents": "replace into `iwpd524_woocommerce_tax_rates` (`tax_rate_id`, `tax_rate_country`, `tax_rate_state`, `tax_rate`, `tax_rate_name`, `tax_rate_priority`, `tax_rate_compound`, `tax_rate_shipping`, `tax_rate_order`, `tax_rate_class`) VALUES ('2', 'SE', '', '12.0000', 'VAT 12%', '1', '0', '1', '0', 'reduced-rate');"
-      }
-    },
-    {
-      "step": "runSql",
-      "sql": {
-        "resource": "literal",
-        "name": "schema.sql",
-        "contents": "replace into `iwpd524_woocommerce_tax_rates` (`tax_rate_id`, `tax_rate_country`, `tax_rate_state`, `tax_rate`, `tax_rate_name`, `tax_rate_priority`, `tax_rate_compound`, `tax_rate_shipping`, `tax_rate_order`, `tax_rate_class`) VALUES ('3', 'SE', '', '0.0000', 'VAT 0%', '1', '0', '1', '0', 'zero-rate');"
-      }
-    },
-    {
       "step": "setSiteOptions",
       "options": {
         "woocommerce_enable_shipping_calc": "yes",
@@ -128,30 +104,6 @@
         "woocommerce_shipping_hide_rates_when_free": "no",
         "woocommerce_ship_to_destination": "billing",
         "woocommerce_shipping_debug_mode": "no"
-      }
-    },
-    {
-      "step": "runSql",
-      "sql": {
-        "resource": "literal",
-        "name": "schema.sql",
-        "contents": "replace into `iwpd524_woocommerce_shipping_zone_methods` (`zone_id`, `instance_id`, `method_id`, `method_order`, `is_enabled`) VALUES ('0', '1', 'flat_rate', '1', '1');"
-      }
-    },
-    {
-      "step": "runSql",
-      "sql": {
-        "resource": "literal",
-        "name": "schema.sql",
-        "contents": "replace into `iwpd524_woocommerce_shipping_zone_methods` (`zone_id`, `instance_id`, `method_id`, `method_order`, `is_enabled`) VALUES ('0', '2', 'local_pickup', '2', '1');"
-      }
-    },
-    {
-      "step": "runSql",
-      "sql": {
-        "resource": "literal",
-        "name": "schema.sql",
-        "contents": "replace into `iwpd524_options` (`option_id`, `option_name`, `option_value`, `autoload`) VALUES ('594', 'woocommerce_flat_rate_1_settings', 'a:3:{s:5:\\\"title\\\";s:13:\\\"Home delivery\\\";s:10:\\\"tax_status\\\";s:7:\\\"taxable\\\";s:4:\\\"cost\\\";s:5:\\\"40,83\\\";}', 'auto');"
       }
     },
     {
@@ -237,7 +189,7 @@
     {
       "step": "setSiteOptions",
       "options": {
-        "woocommerce_coming_soon": "yes",
+        "woocommerce_coming_soon": "no",
         "woocommerce_store_pages_only": "no"
       }
     },

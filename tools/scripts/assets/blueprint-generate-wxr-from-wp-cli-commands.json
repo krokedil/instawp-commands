@@ -1,0 +1,117 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  	"meta": {
+		"title": "Generate WXR from WP-CLI Commands",
+		"description": "This blueprint is used to generate a WXR file from WP-CLI commands, which can be used to set up a WooCommerce store sample products, variations and coupons.",
+		"author": "krokedil",
+		"categories": ["woocommerce"]
+	},
+  "siteOptions": {
+    "blogname": "Generate WXR from WP-CLI Commands"
+  },
+  "plugins": ["woocommerce"],
+  "login": true,
+  "landingPage": "/wp-admin/export.php",
+  "steps": [
+    {
+      "step": "runPHP",
+      "code": "<?php include 'wordpress/wp-load.php'; delete_transient( '_wc_activation_redirect' );"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple 25%\" --sku=\"simple-25\" --regular_price=\"99.99\" --virtual=false --downloadable=false --tax_class=\"25\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple 12%\" --sku=\"simple-12\" --regular_price=\"158.39\" --virtual=false --downloadable=false --tax_class=\"12\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple 06%\" --sku=\"simple-06\" --regular_price=\"84.49\" --virtual=false --downloadable=false --tax_class=\"06\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple 00%\" --sku=\"simple-00\" --regular_price=\"9.99\" --virtual=false --downloadable=false --tax_class=\"00\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple Virtual/Downloadable 25%\" --sku=\"simple-vir-down-25\" --regular_price=\"99.99\" --virtual=true --downloadable=true --tax_class=\"25\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple Virtual/Downloadable 12%\" --sku=\"simple-vir-down-12\" --regular_price=\"158.39\" --virtual=true --downloadable=true --tax_class=\"12\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple Virtual/Downloadable 06%\" --sku=\"simple-vir-down-06\" --regular_price=\"84.49\" --virtual=true --downloadable=true --tax_class=\"06\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple Virtual/Downloadable 00%\" --sku=\"simple-vir-down-00\" --regular_price=\"9.99\" --virtual=true --downloadable=true --tax_class=\"00\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple Virtual 25%\" --sku=\"simple-virtual-25\" --regular_price=\"199.99\" --virtual=true --downloadable=false --tax_class=\"25\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Simple Downloadable 25%\" --sku=\"simple-downloadable-25\" --regular_price=\"118.89\" --virtual=false --downloadable=true --tax_class=\"25\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product_attribute create --name=\"Color\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Variable 25%\" --sku=\"variable-25\" --virtual=false --downloadable=false --tax_class=\"25\" --type=\"variable\" --attributes='[{ \"id\": 1, \"name\": \"Color\", \"variation\": true, \"visible\": true, \"options\" : [\"Black\", \"Red\", \"Blue\"] }]' --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product create --name=\"Variable 12%\" --sku=\"variable-12\" --virtual=false --downloadable=false --tax_class=\"12\" --type=\"variable\" --attributes='[{ \"id\": 1, \"name\": \"Color\", \"variation\": true, \"visible\": true, \"options\" : [\"Black\", \"Red\", \"Blue\"] }]' --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product_variation create 20 --sku=\"variable-25-black\" --regular_price=\"26.75\" --attributes='[{\"id\": 1, \"option\": \"Black\"}]' --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product_variation create 20 --sku=\"variable-25-red\" --regular_price=\"53.27\" --attributes='[{\"id\": 1, \"option\": \"Red\"}]' --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product_variation create 20 --sku=\"variable-25-blue\" --regular_price=\"96.37\" --attributes='[{\"id\": 1, \"option\": \"Blue\"}]' --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product_variation create 21 --sku=\"variable-12-black\" --regular_price=\"73.21\" --attributes='[{\"id\": 1, \"option\": \"Black\"}]' --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product_variation create 21 --sku=\"variable-12-red\" --regular_price=\"21.67\" --attributes='[{\"id\": 1, \"option\": \"Red\"}]' --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc product_variation create 21 --sku=\"variable-12-blue\" --regular_price=\"55.91\" --attributes='[{\"id\": 1, \"option\": \"Blue\"}]' --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc shop_coupon create --code=\"fixed-10\" --amount=\"10\" --discount_type=\"fixed_cart\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc shop_coupon create --code=\"percent-10\" --amount=\"10\" --discount_type=\"percent\" --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc shop_coupon create --code=\"percent-100\" --amount=\"100\" --discount_type=\"percent\" --free_shipping=true --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp wc shop_coupon create --code=\"totalfreeshipping\" --amount=\"0\" --discount_type=\"fixed_cart\" --free_shipping=true --user=\"admin\""
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp export --dir=/instawp-commands/assets/wxr-exports --post_type='product,product_variation,shop_coupon' --filename_format='products-coupons-for-tests.wordpress.xml'"
+    }
+  ]
+}
