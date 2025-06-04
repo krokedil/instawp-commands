@@ -55,6 +55,9 @@ jobs:
           fi
           JSON_PAYLOAD+='}'
           echo "Payload: $JSON_PAYLOAD"
+          echo "--- JSON payload sent to InstaWP ---"
+          echo "$JSON_PAYLOAD" | jq . || echo "$JSON_PAYLOAD"
+          echo "------------------------------------"
           curl -X POST \
             -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
             -H "Accept: application/json" \
