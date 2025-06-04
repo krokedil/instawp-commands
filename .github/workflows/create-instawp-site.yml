@@ -106,7 +106,7 @@ jobs:
           echo "Site ID: $SITE_ID"
           echo "site_id=$SITE_ID" >> $GITHUB_OUTPUT
 
-      - name: Run helper-install-wc-dev-version command
+      - name: Run setup-default-site command
         env:
           INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
         run: |
@@ -116,30 +116,11 @@ jobs:
             -H "Accept: application/json" \
             -H "Content-Type: application/json" \
             -d '{
-              "command_id": 2336
+              "command_id": 2344
             }' \
             https://app.instawp.io/api/v2/sites/$SITE_ID/execute-command > instawp-command1-response.json
-          echo "Command run response (helper-install-wc-dev-version):"
+          echo "Command run response (setup-default-site):"
           cat instawp-command1-response.json
-
-      - name: Run helper-wc-blueprint-import command
-        env:
-          INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
-        run: |
-          SITE_ID="${{ steps.extract_site_id.outputs.site_id }}"
-          curl -X POST \
-            -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
-            -H "Accept: application/json" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "command_id": 2334,
-              "commandArguments": [
-                { "wc_blueprint_json_public_url": "https://raw.githubusercontent.com/krokedil/instawp-commands/refs/heads/main/assets/wc-blueprints/wc-blueprint-default.json" }
-              ]
-            }' \
-            https://app.instawp.io/api/v2/sites/$SITE_ID/execute-command > instawp-command2-response.json
-          echo "Command run response (helper-wc-blueprint-import):"
-          cat instawp-command2-response.json
 
       - name: Annotate site creation summary
         env:
