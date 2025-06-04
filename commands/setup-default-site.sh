@@ -14,24 +14,3 @@ wp plugin install wordpress-importer --activate
 curl -fsSL "https://raw.githubusercontent.com/krokedil/instawp-commands/refs/heads/main/assets/wxr-exports/products-coupons-for-tests.wordpress.xml" -o "wxr-imported-from-instawp-command.xml"
 wp import wxr-imported-from-instawp-command.xml --authors=skip
 rm "wxr-imported-from-instawp-command.xml"
-
-# Create tax settings and shipping methods.
-wp wc tax create --country="SE" --rate="25" --name="VAT 25%" --class="standard" --user=1
-wp wc tax create --country="SE" --rate="12" --name="VAT 12%" --class="reduced-rate" --user=1
-wp wc tax create --country="SE" --rate="0" --name="VAT 0%" --class="zero-rate" --user=1
-wp wc shipping_zone_method create 0 --enabled=true --method_id="flat_rate" --settings='{"title": "Home delivery","cost": "40,83"}' --user=1
-wp wc shipping_zone_method create 0 --enabled=true --method_id="local_pickup" --settings='{"title": "Pickup in store","cost": "0"}' --user=1
-
-# Update user meta to simplify testing when logged in as admin.
-wp user meta add 1 billing_first_name "Krokedil"
-wp user meta add 1 billing_last_name "Admin Test"
-wp user meta add 1 billing_address_1 "Sveavägen 1"
-wp user meta add 1 billing_city "Stockholm"
-wp user meta add 1 billing_postcode "11157"
-wp user meta add 1 billing_phone "+463390510"
-wp user meta add 1 shipping_first_name "Krokedil"
-wp user meta add 1 shipping_last_name "Admin Test"
-wp user meta add 1 shipping_address_1 "Sveavägen 1"
-wp user meta add 1 shipping_city "Stockholm"
-wp user meta add 1 shipping_postcode "11157"
-wp user meta add 1 shipping_phone "+463390510"

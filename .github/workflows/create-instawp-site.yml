@@ -67,15 +67,18 @@ jobs:
           echo "Response from InstaWP:"
           cat instawp-site-response.json
 
-      - name: Extract task_id and site_id
+      - name: Extract task_id, site_id, and wp_url
         id: extract_ids
         run: |
           TASK_ID=$(jq -r '.data.task_id' instawp-site-response.json)
           SITE_ID=$(jq -r '.data.id' instawp-site-response.json)
+          WP_URL=$(jq -r '.data.wp_url' instawp-site-response.json)
           echo "Task ID: $TASK_ID"
           echo "Site ID: $SITE_ID"
+          echo "WP URL: $WP_URL"
           echo "task_id=$TASK_ID" >> $GITHUB_OUTPUT
           echo "site_id=$SITE_ID" >> $GITHUB_OUTPUT
+          echo "wp_url=$WP_URL" >> $GITHUB_OUTPUT
 
       - name: Wait for site to be ready
         id: wait_for_site
@@ -125,16 +128,5 @@ jobs:
           INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
         run: |
           SITE_ID="${{ steps.extract_ids.outputs.site_id }}"
-          # Fetch site details to get the site URL (url field)
-          SITE_DETAILS=$(curl -s -X GET \
-            -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
-            -H "Accept: application/json" \
-            https://app.instawp.io/api/v2/sites/$SITE_ID)
-          echo "--- Response from InstaWP (site details) ---"
-          echo "$SITE_DETAILS"
-          echo "---------------------------------------------"
-          SITE_URL=$(echo "$SITE_DETAILS" | jq -r '.data.url')
-          if [ -z "$SITE_URL" ] || [ "$SITE_URL" = "null" ]; then
-            SITE_URL="(url not available)"
-          fi
-          echo "::notice title=InstaWP Site Created::Created site $SITE_URL, find magic login and details at https://app.instawp.io/sites/$SITE_ID/staging-dashboard?tab=all"
+          WP_URL="${{ steps.extract_ids.outputs.wp_url }}"
+          echo "::notice title=InstaWP Site Created::Created site $WP_URL, find magic login and details at https://app.instawp.io/sites/$SITE_ID/staging-dashboard?tab=all"
