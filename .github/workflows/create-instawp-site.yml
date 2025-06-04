@@ -39,8 +39,8 @@ jobs:
           IS_RESERVED_INPUT="${{ github.event.inputs.is_reserved }}"
           # Build JSON payload
           JSON_PAYLOAD='{
-            "configuration_id": 5141,
-            "team_id": 4875,
+            "configuration_id": '5141',
+            "team_id": '4875',
             "is_reserved": '"$IS_RESERVED_INPUT"',
             "expiry_hours": '"$EXPIRY_HOURS"'
           '
@@ -64,19 +64,22 @@ jobs:
           echo "Response from InstaWP:"
           cat instawp-site-response.json
 
-      - name: Extract task_id
-        id: extract_task
+      - name: Extract task_id and site_id
+        id: extract_ids
         run: |
           TASK_ID=$(jq -r '.data.task_id' instawp-site-response.json)
+          SITE_ID=$(jq -r '.data.id' instawp-site-response.json)
           echo "Task ID: $TASK_ID"
+          echo "Site ID: $SITE_ID"
           echo "task_id=$TASK_ID" >> $GITHUB_OUTPUT
+          echo "site_id=$SITE_ID" >> $GITHUB_OUTPUT
 
-      - name: Wait for site to be ready and extract site_id
+      - name: Wait for site to be ready
         id: wait_for_site
         env:
           INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
         run: |
-          TASK_ID="${{ steps.extract_task.outputs.task_id }}"
+          TASK_ID="${{ steps.extract_ids.outputs.task_id }}"
           for i in {1..30}; do
             echo "Checking site status (attempt $i)..."
             curl -s -X GET \
@@ -91,7 +94,6 @@ jobs:
             echo "Task status: $TASK_STATUS, site_id: $SITE_ID"
             if [ "$TASK_STATUS" = "completed" ] && [ -n "$SITE_ID" ] && [ "$SITE_ID" != "null" ]; then
               echo "Site is ready!"
-              echo "site_id=$SITE_ID" >> $GITHUB_OUTPUT
               exit 0
             fi
             sleep 10
@@ -99,18 +101,11 @@ jobs:
           echo "Timed out waiting for site to be ready." >&2
           exit 1
 
-      - name: Extract site_id
-        id: extract_site_id
-        run: |
-          SITE_ID="${{ steps.wait_for_site.outputs.site_id }}"
-          echo "Site ID: $SITE_ID"
-          echo "site_id=$SITE_ID" >> $GITHUB_OUTPUT
-
       - name: Run setup-default-site command
         env:
           INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
         run: |
-          SITE_ID="${{ steps.extract_site_id.outputs.site_id }}"
+          SITE_ID="${{ steps.extract_ids.outputs.site_id }}"
           curl -X POST \
             -H "Authorization: Bearer $INSTAWP_API_TOKEN" \
             -H "Accept: application/json" \
@@ -126,7 +121,7 @@ jobs:
         env:
           INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
         run: |
-          SITE_ID="${{ steps.extract_site_id.outputs.site_id }}"
+          SITE_ID="${{ steps.extract_ids.outputs.site_id }}"
           # Fetch site details to get the site URL (url field)
           SITE_DETAILS=$(curl -s -X GET \
             -H "Authorization: Bearer $INSTAWP_API_TOKEN" \

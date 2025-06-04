@@ -53,5 +53,5 @@ wp menu item add-post primary-menu $(wp option get woocommerce_myaccount_page_id
 # Configure theme and widgets.
 wp widget reset --all # Remove all default widgets to enable full width
 wp theme mod set storefront_product_pagination "0"
+wp option update show_on_front "page"
 wp option update page_on_front $(wp option get woocommerce_shop_page_id)
-wp rewrite structure "/%postname%/" --hard
