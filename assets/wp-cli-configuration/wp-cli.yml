@@ -1,0 +1,21 @@
+# Project-specific WP-CLI configuration
+
+# Specify the path to the WordPress installation (often useful if running WP-CLI from a sub-directory)
+# path: public_html # Uncomment and adjust if your wp-config.php is in a different relative location
+
+# Enable colors in output
+#color: true
+
+# Disable specific commands if needed
+# disabled_commands:
+#  - db drop
+
+# Assume 'mod_rewrite' is available for Apache
+apache_modules:
+  - mod_rewrite
+
+# Example: Set a default user for commands that require a user
+# user: my_admin_username
+
+# Example: Set a default URL (useful if WP-CLI can't guess it)
+# url: https://useful-cow-46d856.krokedil.site
