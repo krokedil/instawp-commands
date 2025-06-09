@@ -41,6 +41,7 @@ jobs:
           JSON_PAYLOAD='{
             "configuration_id": '5141',
             "team_id": '4875',
+            "server_group_id": '4',
             "is_reserved": '"$IS_RESERVED_INPUT"',
             "expiry_hours": '"$EXPIRY_HOURS"'
           '
