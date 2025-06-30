@@ -1,0 +1,83 @@
+{
+    "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+    "steps": [
+        {
+            "step": "installPlugin",
+            "pluginData": {
+                "resource": "wordpress.org/plugins",
+                "slug": "klarna-order-management-for-woocommerce"
+            },
+            "options": {
+                "activate": true
+            }
+        },
+        {
+            "step": "setSiteOptions",
+            "options": {
+                "woocommerce_kco_settings": {
+                    "enabled": "yes",
+                    "title": "Klarna",
+                    "description": "",
+                    "select_another_method_text": "Other payment methods",
+                    "add_to_email": "yes",
+                    "testmode": "yes",
+                    "logging": "yes",
+                    "checkout_layout": "two_column_right",
+                    "credentials_eu": "",
+                    "merchant_id_eu": "",
+                    "shared_secret_eu": "",
+                    "test_merchant_id_eu": "",
+                    "test_shared_secret_eu": "",
+                    "credentials_us": "",
+                    "merchant_id_us": "",
+                    "shared_secret_us": "",
+                    "test_merchant_id_us": "",
+                    "test_shared_secret_us": "",
+                    "shipping_section": "",
+                    "allow_separate_shipping": "no",
+                    "shipping_methods_in_iframe": "yes",
+                    "shipping_details": "",
+                    "checkout_section": "",
+                    "send_product_urls": "yes",
+                    "dob_mandatory": "no",
+                    "nin_validation_mandatory": "no",
+                    "display_privacy_policy_text": "above",
+                    "add_terms_and_conditions_checkbox": "yes",
+                    "allowed_customer_types": "B2CB",
+                    "title_mandatory": "no",
+                    "prefill_consent": "yes",
+                    "quantity_fields": "yes",
+                    "show_subtotal_detail": "woo",
+                    "color_settings_title": "",
+                    "color_button": "",
+                    "color_button_text": "",
+                    "color_checkbox": "",
+                    "color_checkbox_checkmark": "",
+                    "color_header": "",
+                    "color_link": "",
+                    "radius_border": "",
+                    "onsite_messaging": "",
+                    "data_client_id": "",
+                    "onsite_messaging_enabled_product": "yes",
+                    "placement_data_key_product": "credit-promotion-badge",
+                    "onsite_messaging_theme_product": "default",
+                    "onsite_messaging_product_location": "45",
+                    "onsite_messaging_enabled_cart": "yes",
+                    "placement_data_key_cart": "credit-promotion-badge",
+                    "onsite_messaging_cart_location": "woocommerce_after_cart_totals",
+                    "onsite_messaging_theme_cart": "dark",
+                    "custom_product_page_widget_enabled": "no",
+                    "custom_product_page_placement_hook": "woocommerce_single_product_summary",
+                    "custom_product_page_placement_priority": "35",
+                    "kom_auto_capture": "yes",
+                    "kom_auto_cancel": "yes",
+                    "kom_auto_update": "yes",
+                    "kom_auto_order_sync": "yes",
+                    "kom_force_full_capture": "no",
+                    "kom_debug_log": "yes",
+                    "checkout_flow": "embedded"
+                }
+            }
+        }
+    ]
+}

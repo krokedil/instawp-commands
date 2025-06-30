@@ -1,4 +1,4 @@
-# Helper script to import WooCommerce blueprint
+# Helper script to import a WooCommerce blueprint that is accessible via a public URL.
 
 # Download the provided public JSON file to a private location in the home directory
 curl -fsSL "{{wc_blueprint_json_public_url}}" -o "wc-blueprint-imported-from-instawp-command.json"
