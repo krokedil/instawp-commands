@@ -7,6 +7,9 @@ curl -fsSL "https://raw.githubusercontent.com/krokedil/instawp-commands/refs/hea
 wp plugin install woocommerce --activate --force --skip-plugins --skip-themes --version=dev
 wp transient delete _wc_activation_redirect
 
+# Set constant to allow importing WooCommerce blueprints in live mode.
+wp config set ALLOW_BLUEPRINT_IMPORT_IN_LIVE_MODE true --raw
+
 # Download WC blueprint JSON file, import it and delete it.
 curl -fsSL "https://raw.githubusercontent.com/krokedil/instawp-commands/refs/heads/main/assets/wc-blueprints/wc-blueprint-default.json" -o "wc-blueprint-imported-from-instawp-command.json"
 wp wc blueprint import "wc-blueprint-imported-from-instawp-command.json" --show-messages=all --user=1

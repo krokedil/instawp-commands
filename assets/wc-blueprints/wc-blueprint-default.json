@@ -226,7 +226,10 @@
         "woocommerce_hpos_fts_index_enabled": "no",
         "woocommerce_hpos_datastore_caching_enabled": "no",
         "woocommerce_feature_block_email_editor_enabled": "no",
-        "woocommerce_feature_cost_of_goods_sold_enabled": "no"
+        "woocommerce_feature_cost_of_goods_sold_enabled": "no",
+        "woocommerce_onboarding_profile": {
+          "skipped": true
+        }
       }
     }
   ]
