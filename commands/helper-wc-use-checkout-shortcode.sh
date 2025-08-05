@@ -1,0 +1,2 @@
+# Helper script to set so that the WooCommerce checkout shortcode is used.
+wp post update $(wp option get woocommerce_checkout_page_id --format=ids) --post_content='[woocommerce_checkout]' --skip-plugins --skip-themes
