@@ -4,7 +4,7 @@
 echo '{{wc_blueprint_json_string}}' > wc-blueprint-imported-from-instawp-command.json
 
 # Import the WooCommerce blueprint using the wp wc command
-wp wc blueprint import "wc-blueprint-imported-from-instawp-command.json" --show-messages=all --user=1
+wp wc blueprint import "wc-blueprint-imported-from-instawp-command.json" --show-messages=all --user=1 --skip-plugins --skip-themes
 
 # Remove the temporary file
 rm "wc-blueprint-imported-from-instawp-command.json"
