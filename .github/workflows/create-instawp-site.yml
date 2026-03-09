@@ -4,26 +4,26 @@ on:
   workflow_dispatch:
     inputs:
       site_name:
-        description: 'Site name (Leave blank for surprise)'
+        description: "Site name (Leave blank for surprise)"
         required: false
-        default: ''
+        default: ""
       is_reserved:
         type: boolean
-        description: 'Reserve site?'
+        description: "Reserve site?"
         required: true
         default: false
       expiry_hours:
-        description: 'Expiry hours if not reserved'
+        description: "Expiry hours if not reserved"
         required: false
-        default: '1'
+        default: "1"
       wp_version:
-        description: 'WP version (Leave blank for default)'
+        description: "WP version (Leave blank for default)"
         required: false
-        default: ''
+        default: ""
       php_version:
-        description: 'PHP version (Leave blank for default)'
+        description: "PHP version (Leave blank for default)"
         required: false
-        default: ''
+        default: ""
 
 jobs:
   create-instawp-site:
@@ -32,11 +32,10 @@ jobs:
       - name: Create a new InstaWP site
         env:
           INSTAWP_API_TOKEN: ${{ secrets.INSTAWP_API_TOKEN }}
+          SITE_NAME: ${{ github.event.inputs.site_name }}
+          EXPIRY_HOURS: ${{ github.event.inputs.expiry_hours }}
+          IS_RESERVED_INPUT: ${{ github.event.inputs.is_reserved }}
         run: |
-          # Parse workflow inputs
-          SITE_NAME="${{ github.event.inputs.site_name }}"
-          EXPIRY_HOURS="${{ github.event.inputs.expiry_hours }}"
-          IS_RESERVED_INPUT="${{ github.event.inputs.is_reserved }}"
           # Build JSON payload
           JSON_PAYLOAD='{
             "configuration_id": '5141',
@@ -48,11 +47,11 @@ jobs:
           if [ -n "$SITE_NAME" ]; then
             JSON_PAYLOAD+=" ,\"site_name\": \"$SITE_NAME\""
           fi
-          if [ -n "${{ github.event.inputs.wp_version }}" ]; then
-            JSON_PAYLOAD+=" ,\"wp_version\": \"${{ github.event.inputs.wp_version }}\""
+          if [ -n "$WP_VERSION" ]; then
+            JSON_PAYLOAD+=" ,\"wp_version\": \"$WP_VERSION\""
           fi
-          if [ -n "${{ github.event.inputs.php_version }}" ]; then
-            JSON_PAYLOAD+=" ,\"php_version\": \"${{ github.event.inputs.php_version }}\""
+          if [ -n "$PHP_VERSION" ]; then
+            JSON_PAYLOAD+=" ,\"php_version\": \"$PHP_VERSION\""
           fi
           JSON_PAYLOAD+='}'
           echo "Payload: $JSON_PAYLOAD"
